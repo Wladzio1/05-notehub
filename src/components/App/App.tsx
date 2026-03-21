@@ -10,7 +10,7 @@ import NoteList from "../NoteList/NoteList";
 import NoteForm from "../NoteForm/NoteForm";
 import Modal from "../Modal/Modal";
 
-import { fetchNotes, deleteNote, createNote } from "../services/noteService";
+import { fetchNotes, deleteNote, createNote } from "../../services/noteService";
 
 export default function App() {
   const [page, setPage] = useState(1);
