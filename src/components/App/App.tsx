@@ -1,7 +1,12 @@
 import { useState } from "react";
 import css from "./App.module.css";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import { useDebouncedCallback } from "use-debounce";
 
 import SearchBox from "../SearchBox/SearchBox";
@@ -25,16 +30,12 @@ export default function App() {
 
   const queryClient = useQueryClient();
 
-  // --- POBIERANIE NOTATEK ---
   const { data, isLoading, isError } = useQuery<FetchNotesResponse, Error>({
     queryKey: ["notes", page, search],
-    queryFn: async () => {
-      const result = await fetchNotes(page, 12, search);
-      return result as FetchNotesResponse; // wymuszenie poprawnego typu dla TS
-    },
+    queryFn: () => fetchNotes(page, 12, search),
+    placeholderData: keepPreviousData,
   });
 
-  // --- TWORZENIE NOWEJ NOTATKI ---
   const createMutation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
@@ -64,13 +65,19 @@ export default function App() {
           />
         )}
 
-        <button onClick={() => setIsOpen(true)}>Create note +</button>
+        <button className={css.button} onClick={() => setIsOpen(true)}>
+          Create note +
+        </button>
       </header>
 
       {isLoading && <p>Loading...</p>}
       {isError && <p>Error loading notes...</p>}
 
-      {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
+      {data?.notes.length ? (
+        <NoteList notes={data.notes} />
+      ) : (
+        <p>No notes found</p>
+      )}
 
       {isOpen && (
         <Modal onClose={() => setIsOpen(false)}>

@@ -23,7 +23,12 @@ export default function Modal({ children, onClose }: ModalProps) {
   }, [onClose]);
 
   return createPortal(
-    <div className={css.backdrop} onClick={onClose}>
+    <div
+      className={css.backdrop}
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
       <div className={css.modal} onClick={(e) => e.stopPropagation()}>
         {children}
       </div>
