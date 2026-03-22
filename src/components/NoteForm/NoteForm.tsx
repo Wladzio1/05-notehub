@@ -21,12 +21,12 @@ const schema = Yup.object({
 });
 
 export default function NoteForm({ onCancel }: NoteFormProps) {
-  const quesryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
-      quesryClient.invalidateQueries({ queryKey: ["notes"] });
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
       onCancel();
     }
   });
